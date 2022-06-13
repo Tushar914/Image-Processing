@@ -12,13 +12,13 @@ def get_pixel_neighbours(x, y):
     return neighbour_lst
 
 
-def image_proc(img_url):
+def image_filter(img_url):
     img_orig = Image.open(img_url)
     width, height = img_orig.size
     print("Width: ", width, " | Height: ", height)
 
-    effect_strength = 1/128
-    effect = [effect_strength] * 9
+    #effect_strength = 1/128
+    effect = [1, 0, -1, 2, 0, -2, 1, 0, -1]
     all_rgb = []
     img_new = Image.new(mode="RGB", size=(width, height))
 
@@ -34,10 +34,7 @@ def image_proc(img_url):
                 new_rgb = apply_effect_to_rgb(pixel_rgb, effect[effect_idx])
                 effect_idx += 1
                 all_rgb.append(new_rgb)
-                # if(n_pixel == (10, 10)):
-                #     return
-            # print("All rgb: ", average(all_rgb))
-            img_new.putpixel((w, h), apply_effect_to_rgb(max(all_rgb), 1/effect_strength))
+            img_new.putpixel((w, h), convert_rgb_to_grayscale(average_rgb(all_rgb, absolute=True), strength=5))
             all_rgb = []
             
     img_new.show()
@@ -52,7 +49,14 @@ def check_img_w_h():
     width, height = img_orig.size
     print(width, height)
 
-def average(rgb, absolute=False):
+def convert_rgb_to_grayscale(x, strength=1):
+    total = 0
+    for num in x:
+        total += num
+
+    return tuple([int(abs(total/len(x))) * strength]) * 3
+
+def average_rgb(rgb, absolute=False):
     r, g, b = 0, 0, 0
     for num in rgb:
         r += num[0]
@@ -68,6 +72,4 @@ def average(rgb, absolute=False):
     )
 
 
-image_proc('images/Screenshot (18).png')
-# image_proc('images/leaves.jpg')
-#apply_effect_to_rgb((220, 110, 55), 1/9)
+image_filter('images/Screenshot (18).png')
