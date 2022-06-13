@@ -12,7 +12,7 @@ def get_pixel_neighbours(x, y):
     return neighbour_lst
 
 
-def image_filter(img_url):
+def image_filter(img_url, save_image=False):
     img_orig = Image.open(img_url)
     width, height = img_orig.size
     print("Width: ", width, " | Height: ", height)
@@ -38,6 +38,8 @@ def image_filter(img_url):
             all_rgb = []
             
     img_new.show()
+    if save_image:
+        img_new.save(img_orig.filename + " altered.png")
 
 
 def apply_effect_to_rgb(rgb, filter_val):
@@ -72,4 +74,4 @@ def average_rgb(rgb, absolute=False):
     )
 
 
-image_filter('images/Screenshot (18).png')
+image_filter('images/leaves.jpg', save_image=True)
