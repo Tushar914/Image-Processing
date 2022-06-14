@@ -12,12 +12,11 @@ def get_pixel_neighbours(x, y):
     return neighbour_lst
 
 
-def image_filter(img_url, save_image=False, grayscale=False, effect_strength=1):
+def image_filter(img_url, img_filter, save_image=False, grayscale=False, effect_strength=1):
     img_orig = Image.open(img_url)
     width, height = img_orig.size
     print("Width: ", width, " | Height: ", height)
-
-    effect = [1, 0, -1, 2, 0, -2, 1, 0, -1]
+    
     img_new = Image.new(mode="RGB", size=(width, height))
 
     for w in range(0, width):
@@ -30,9 +29,10 @@ def image_filter(img_url, save_image=False, grayscale=False, effect_strength=1):
                     #print("Neighbour: ", n_pixel, " out of bounds")
                     continue
                 pixel_rgb = img_orig.getpixel(n_pixel)
-                new_rgb = apply_effect_to_rgb(pixel_rgb, effect[effect_idx])
+                new_rgb = apply_effect_to_rgb(pixel_rgb, img_filter[effect_idx])
                 effect_idx += 1
                 all_rgb.append(new_rgb)
+
             if(grayscale):
                 img_new.putpixel((w, h), convert_rgb_to_grayscale(average_rgb(all_rgb, absolute=True), strength=effect_strength))
             else:
@@ -73,5 +73,10 @@ def average_rgb(rgb, absolute=False, strength=1):
         int(r/len(rgb)) * strength, int(g/len(rgb)) * strength, int(b/len(rgb) * strength)
     )
 
+#edge detection, enable grayscale for maximum effect
+#filter_parm = [1, 0, -1, 2, 0, -2, 1, 0, -1]
 
-image_filter('images/Screenshot (18).png', save_image=False, grayscale=False, effect_strength=10)
+#dreamy
+filter_parm = [4, 3, 2, 1, 0, -1, -2, -3, -4]
+
+image_filter('images/Screenshot (18).png', filter_parm, save_image=True, grayscale=False, effect_strength=10)
