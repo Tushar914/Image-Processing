@@ -18,13 +18,13 @@ def image_filter(img_url, save_image=False, grayscale=False, effect_strength=1):
     print("Width: ", width, " | Height: ", height)
 
     effect = [1, 0, -1, 2, 0, -2, 1, 0, -1]
-    all_rgb = []
     img_new = Image.new(mode="RGB", size=(width, height))
 
     for w in range(0, width):
         for h in range(0, height):
             n_list = get_pixel_neighbours(w, h)
             effect_idx = 0
+            all_rgb = []
             for n_pixel in n_list:
                 if (n_pixel[0] >= width) or (n_pixel[1] >= height) or (n_pixel[0] <= 0) or (n_pixel[1] <= 0):
                     #print("Neighbour: ", n_pixel, " out of bounds")
@@ -33,13 +33,10 @@ def image_filter(img_url, save_image=False, grayscale=False, effect_strength=1):
                 new_rgb = apply_effect_to_rgb(pixel_rgb, effect[effect_idx])
                 effect_idx += 1
                 all_rgb.append(new_rgb)
-            #img_new.putpixel((w, h), convert_rgb_to_grayscale(average_rgb(all_rgb, absolute=True), strength=5))
             if(grayscale):
                 img_new.putpixel((w, h), convert_rgb_to_grayscale(average_rgb(all_rgb, absolute=True), strength=effect_strength))
             else:
                 img_new.putpixel((w, h), average_rgb(all_rgb, absolute=True, strength=effect_strength))
-
-            all_rgb = []
             
     img_new.show()
     if save_image:
@@ -73,8 +70,8 @@ def average_rgb(rgb, absolute=False, strength=1):
         )
     
     return (
-        int(r/len(rgb)), int(g/len(rgb)), int(b/len(rgb))
+        int(r/len(rgb)) * strength, int(g/len(rgb)) * strength, int(b/len(rgb) * strength)
     )
 
 
-image_filter('images/Screenshot (18).png', save_image=False, grayscale=True, effect_strength=10)
+image_filter('images/Screenshot (18).png', save_image=False, grayscale=False, effect_strength=10)
