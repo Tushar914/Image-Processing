@@ -12,12 +12,11 @@ def get_pixel_neighbours(x, y):
     return neighbour_lst
 
 
-def image_filter(img_url, save_image=False):
+def image_filter(img_url, save_image=False, grayscale=False, effect_strength=1):
     img_orig = Image.open(img_url)
     width, height = img_orig.size
     print("Width: ", width, " | Height: ", height)
 
-    #effect_strength = 1/128
     effect = [1, 0, -1, 2, 0, -2, 1, 0, -1]
     all_rgb = []
     img_new = Image.new(mode="RGB", size=(width, height))
@@ -34,13 +33,17 @@ def image_filter(img_url, save_image=False):
                 new_rgb = apply_effect_to_rgb(pixel_rgb, effect[effect_idx])
                 effect_idx += 1
                 all_rgb.append(new_rgb)
-            img_new.putpixel((w, h), convert_rgb_to_grayscale(average_rgb(all_rgb, absolute=True), strength=5))
+            #img_new.putpixel((w, h), convert_rgb_to_grayscale(average_rgb(all_rgb, absolute=True), strength=5))
+            if(grayscale):
+                img_new.putpixel((w, h), convert_rgb_to_grayscale(average_rgb(all_rgb, absolute=True), strength=effect_strength))
+            else:
+                img_new.putpixel((w, h), average_rgb(all_rgb, absolute=True, strength=effect_strength))
+
             all_rgb = []
             
     img_new.show()
     if save_image:
         img_new.save(img_orig.filename + " altered.png")
-
 
 def apply_effect_to_rgb(rgb, filter_val):
     new_rgb = tuple(x * filter_val for x in rgb)
@@ -58,7 +61,7 @@ def convert_rgb_to_grayscale(x, strength=1):
 
     return tuple([int(abs(total/len(x))) * strength]) * 3
 
-def average_rgb(rgb, absolute=False):
+def average_rgb(rgb, absolute=False, strength=1):
     r, g, b = 0, 0, 0
     for num in rgb:
         r += num[0]
@@ -66,7 +69,7 @@ def average_rgb(rgb, absolute=False):
         b += num[2]
     if absolute:
         return (
-            abs(int(r/len(rgb))), abs(int(g/len(rgb))), abs(int(b/len(rgb)))
+            abs(int(r/len(rgb))) * strength, abs(int(g/len(rgb))) * strength, abs(int(b/len(rgb)) * strength)
         )
     
     return (
@@ -74,4 +77,4 @@ def average_rgb(rgb, absolute=False):
     )
 
 
-image_filter('images/leaves.jpg', save_image=True)
+image_filter('images/Screenshot (18).png', save_image=False, grayscale=True, effect_strength=10)
