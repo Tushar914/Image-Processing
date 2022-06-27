@@ -1,4 +1,4 @@
-Apply Filters on images using Kernels
+Apply Filters on images using Kernels.
 Pass in your own matrix in filter_parm field to create a new filter.
 
 Original
