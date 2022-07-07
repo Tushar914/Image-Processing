@@ -11,7 +11,6 @@ def get_pixel_neighbours(x, y):
 
     return neighbour_lst
 
-
 def image_filter(img_url, img_filter, save_image=False, grayscale=False, effect_strength=1):
     img_orig = Image.open(img_url)
     width, height = img_orig.size
@@ -26,7 +25,7 @@ def image_filter(img_url, img_filter, save_image=False, grayscale=False, effect_
             all_rgb = []
             for n_pixel in n_list:
                 if (n_pixel[0] >= width) or (n_pixel[1] >= height) or (n_pixel[0] <= 0) or (n_pixel[1] <= 0):
-                    #print("Neighbour: ", n_pixel, " out of bounds")
+                    #OUT OF BOUNDS
                     continue
                 pixel_rgb = img_orig.getpixel(n_pixel)
                 new_rgb = apply_effect_to_rgb(pixel_rgb, img_filter[effect_idx])
@@ -40,16 +39,11 @@ def image_filter(img_url, img_filter, save_image=False, grayscale=False, effect_
             
     img_new.show()
     if save_image:
-        img_new.save(img_orig.filename + " altered.png")
+        img_new.save("".join(img_orig.filename.split('.')[:-1]) + " altered.png")
 
 def apply_effect_to_rgb(rgb, filter_val):
     new_rgb = tuple(x * filter_val for x in rgb)
     return (int(new_rgb[0]), int(new_rgb[1]), int(new_rgb[2]))
-
-def check_img_w_h():
-    img_orig = Image.open('images/leaves.jpg')
-    width, height = img_orig.size
-    print(width, height)
 
 def convert_rgb_to_grayscale(x, strength=1):
     total = 0
@@ -73,10 +67,13 @@ def average_rgb(rgb, absolute=False, strength=1):
         int(r/len(rgb)) * strength, int(g/len(rgb)) * strength, int(b/len(rgb) * strength)
     )
 
-#edge detection, enable grayscale for maximum effect
-#filter_parm = [1, 0, -1, 2, 0, -2, 1, 0, -1]
+# edge detection, enable grayscale for maximum effect
+# filter_parm = [1, 0, -1, 2, 0, -2, 1, 0, -1]
 
-#dreamy
+# dreamy
 filter_parm = [4, 3, 2, 1, 0, -1, -2, -3, -4]
 
-image_filter('images/Screenshot (18).png', filter_parm, save_image=True, grayscale=False, effect_strength=10)
+# sharpen
+# filter_parm = [-1, 2, 1, -2, 0, 0, 0, -2, 1]
+
+image_filter('images/asphalt.png', filter_parm, save_image=True, grayscale=False, effect_strength=10)
