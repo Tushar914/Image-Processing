@@ -1,5 +1,15 @@
+## SOBEL
+### sobel.py
+
 Apply Filters on images using Kernels.
 Pass in your own matrix in filter_parm field to create a new filter.
+
+Parameters:
+1.) Image path
+2.) Filter array
+3.) Save Image flag
+4.) Grayscale flag
+5.) Strength
 
 Original
 
@@ -12,3 +22,13 @@ Edge Detection
 Dreamy
 
 ![Screenshot (18) png dreamy](https://user-images.githubusercontent.com/18739988/173668245-5f9639ca-2687-4e4c-b017-e3c24653bf92.png)
+
+## GRUNGE
+### grunge.py
+
+Create grunge map for any texture.
+
+Parameters:
+1.) Image path
+2.) Threshold
+3.) Save Image
